@@ -58,7 +58,7 @@ Details on endpoints, rate limits, and caching: [`docs/data_sources.md`](docs/da
 ## Run it yourself
 
 ```bash
-git clone https://github.com/<your-username>/la-crime-weather.git
+git clone https://github.com/SaraArmengol/la-crime-weather.git
 cd la-crime-weather
 make install      # pip install -e ".[app,dev]"
 make pipeline     # download, clean, model, publish (~X min)

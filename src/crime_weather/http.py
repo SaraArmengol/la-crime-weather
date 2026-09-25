@@ -6,7 +6,7 @@ import requests
 from requests.adapters import HTTPAdapter
 from urllib3.util.retry import Retry
 
-USER_AGENT = "la-crime-weather/0.1 (student portfolio project; github.com/<your-username>)"
+USER_AGENT = "la-crime-weather/0.1 (student portfolio project; github.com/SaraArmengol)"
 
 
 def make_session(total_retries: int = 5, backoff: float = 1.0) -> requests.Session:

@@ -85,4 +85,4 @@ if hotspots is not None:
     st.map(hs, latitude="lat", longitude="lon", size="radius_m")
 
 st.divider()
-st.caption("Built by Sara Armengol · [GitHub](https://github.com/<your-username>/la-crime-weather)")
+st.caption("Built by Sara Armengol · [GitHub](https://github.com/SaraArmengol/la-crime-weather)")
