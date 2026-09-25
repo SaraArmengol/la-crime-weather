@@ -40,7 +40,7 @@ def classify_weather_type(daily: pd.DataFrame, cfg: dict) -> pd.Series:
     """
     t = daily["temp_mean_f"]
     conditions = [
-        daily.get("snowfall_cm", pd.Series(0, index=daily.index)) > 0,
+        daily.get("snowfall_cm", pd.Series(0, index=daily.index)) >= cfg["snow_threshold_cm"],
         daily["precip_mm"] >= cfg["rain_threshold_mm"],
         daily.get("cloud_cover_pct", pd.Series(0, index=daily.index)) >= cfg["cloudy_threshold_pct"],
         t >= cfg["hot_min_f"],

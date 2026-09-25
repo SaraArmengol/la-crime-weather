@@ -8,6 +8,7 @@ FIXTURES = Path(__file__).parent / "fixtures"
 
 WEATHER_TYPE_CFG = {
     "rain_threshold_mm": 1.0,
+    "snow_threshold_cm": 1.0,
     "cloudy_threshold_pct": 70,
     "hot_min_f": 82.4,
     "warm_min_f": 59.0,

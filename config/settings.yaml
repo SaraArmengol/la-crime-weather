@@ -43,6 +43,7 @@ features:
     # Labels from the class version, converted from Celsius (28/15/11 C) to Fahrenheit.
     # Based on the daily MEAN temperature (day + night), so "Hot" days are rare in LA.
     rain_threshold_mm: 1.0     # class version used > 0 mm, which counted drizzle as a rainy day
+    snow_threshold_cm: 1.0     # > 0 cm labeled Feb 2023 rainstorms with a trace of snow as "Snow"
     cloudy_threshold_pct: 70
     hot_min_f: 82.4
     warm_min_f: 59.0

@@ -56,14 +56,15 @@ def test_aggregate_daily(weather_payload):
 
 def test_weather_type_order_and_thresholds():
     daily = pd.DataFrame({
-        "temp_mean_f": [85.0, 85.0, 85.0, 70.0, 55.0, 45.0],
-        "precip_mm":   [5.0,  0.0,  0.0,  0.5,  0.0,  0.0],
-        "cloud_cover_pct": [90, 90, 10, 10, 10, 10],
-        "snowfall_cm": [0, 0, 0, 0, 0, 0],
+        "temp_mean_f": [30.0, 45.0, 85.0, 85.0, 85.0, 70.0, 55.0, 45.0],
+        "precip_mm":   [20.0, 55.9, 5.0,  0.0,  0.0,  0.5,  0.0,  0.0],
+        "cloud_cover_pct": [99, 99, 90, 90, 10, 10, 10, 10],
+        "snowfall_cm": [2.0, 0.7, 0, 0, 0, 0, 0, 0],
     })
     labels = classify_weather_type(daily, WEATHER_TYPE_CFG).tolist()
-    # rain beats clouds beats temperature; 0.5 mm drizzle is below the rain threshold
-    assert labels == ["Rainy", "Cloudy", "Hot", "Warm", "Cool", "Cold"]
+    # snow beats rain beats clouds beats temperature; a trace of snow (0.7 cm) on a rainy day
+    # is below the snow threshold, and 0.5 mm drizzle is below the rain threshold
+    assert labels == ["Snow", "Rainy", "Rainy", "Cloudy", "Hot", "Warm", "Cool", "Cold"]
 
 
 def test_clean_weather_end_to_end(weather_payload):
