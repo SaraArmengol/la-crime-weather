@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "la-crime-weather"
+version = "0.1.0"
+description = "ETL pipeline and statistical analysis of how weather relates to crime in Los Angeles."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Sara Armengol" }]
+dependencies = [
+  "pandas>=2.2",
+  "numpy>=1.26",
+  "requests>=2.31",
+  "beautifulsoup4>=4.12",
+  "pyyaml>=6.0",
+  "pyarrow>=15.0",
+  "duckdb>=1.0",
+  "statsmodels>=0.14",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+app = ["streamlit>=1.35", "altair>=5.0"]
+dev = ["pytest>=8.0", "ruff>=0.5"]
+
+[project.scripts]
+crime-weather = "crime_weather.pipeline:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
