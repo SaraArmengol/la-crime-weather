@@ -12,14 +12,15 @@
 ## Weather (Open-Meteo Historical Weather API)
 
 - **Endpoint**: `https://archive-api.open-meteo.com/v1/archive`
-- **Parameters**: latitude/longitude (downtown LA), `start_date`, `end_date`, `daily=temperature_2m_max,...`, `temperature_unit=fahrenheit`, `timezone=America/Los_Angeles`
+- **Parameters**: latitude/longitude (downtown LA), `start_date`, `end_date`, `hourly=temperature_2m,apparent_temperature,precipitation,rain,snowfall,cloud_cover,wind_speed_10m`, `temperature_unit=fahrenheit`, `timezone=America/Los_Angeles`
+- **Why hourly**: aggregating hours ourselves gives daily mean *and* max temperature, mean cloud cover, and mean apparent temperature.
 - **Auth**: none
 - **Caching**: responses saved as JSON in `data/raw/weather_cache/`, keyed by a hash of the request parameters, so re-runs never re-call the API.
-- **If your original project used a different weather API**: replace `fetch_weather` and `parse_daily` in `extract/weather.py`; keep the same output columns so nothing downstream changes.
 
-## Scraped statistics
+## FBI UCR city crime rates (Wikipedia)
 
-- **URL**: [fill in]
-- **robots.txt checked**: [yes/no, date]
-- **What is extracted**: [table description]
-- **Snapshots**: raw HTML saved daily to `data/raw/html/` so the pipeline still runs if the page changes.
+- **URL**: https://en.wikipedia.org/wiki/List_of_United_States_cities_by_crime_rate
+- **What is extracted**: the main table of FBI Uniform Crime Reporting rates per 100,000 residents for large US cities. The data year is stated at the top of the page and changes when the page is updated.
+- **Parsing**: BeautifulSoup finds the first `wikitable`; `pandas.read_html` handles its three-row header. Columns are matched by name, not position.
+- **Snapshots**: raw HTML saved daily to `data/raw/html/`, so results are reproducible and the pipeline still runs if the page changes.
+- **Terms**: Wikipedia content is CC BY-SA; the underlying FBI data is public domain.

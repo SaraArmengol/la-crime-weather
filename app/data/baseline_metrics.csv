@@ -1,0 +1,3 @@
+model,r2,mae,test_period
+Weather only,-0.936,49.424,2023-03-15 to 2023-12-31
+Weather + weekday + month,-0.86,49.561,2023-03-15 to 2023-12-31

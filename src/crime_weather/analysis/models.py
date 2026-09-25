@@ -19,8 +19,10 @@ BASELINE_TEMP_BIN = "70-80"
 
 FORMULA = (
     "crime_count ~ C(temp_bin, Treatment('{base}')) + rain_day + is_holiday"
-    " + C(dow) + C(month) + C(year)"
+    " + is_first_of_month + is_jan_1 + C(dow) + C(month) + C(year)"
 )
+CALENDAR_COLUMNS = ["date", "temp_bin", "rain_day", "is_holiday", "is_first_of_month", "is_jan_1",
+                    "dow", "month", "year"]
 
 
 def fit_count_model(panel: pd.DataFrame, category: str | None = None):
@@ -30,14 +32,10 @@ def fit_count_model(panel: pd.DataFrame, category: str | None = None):
     if category is not None:
         data = data[data["crime_category"] == category]
     if category is None:  # total crime per day
-        data = (
-            data.groupby(["date", "temp_bin", "rain_day", "is_holiday", "dow", "month", "year"],
-                         observed=True)["crime_count"].sum().reset_index()
-        )
+        data = data.groupby(CALENDAR_COLUMNS, observed=True)["crime_count"].sum().reset_index()
     data = data.assign(
         temp_bin=data["temp_bin"].astype(str),
-        rain_day=data["rain_day"].astype(int),
-        is_holiday=data["is_holiday"].astype(int),
+        **{c: data[c].astype(int) for c in ["rain_day", "is_holiday", "is_first_of_month", "is_jan_1"]},
     )
     model = smf.negativebinomial(FORMULA.format(base=BASELINE_TEMP_BIN), data=data)
     return model.fit(disp=False, maxiter=200)

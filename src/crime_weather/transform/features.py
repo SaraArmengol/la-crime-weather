@@ -36,6 +36,10 @@ def add_calendar_features(df: pd.DataFrame) -> pd.DataFrame:
     out["is_weekend"] = d.dt.dayofweek >= 5
     holidays = USFederalHolidayCalendar().holidays(start=d.min(), end=d.max())
     out["is_holiday"] = d.isin(holidays)
+    # Data artifact: crimes with an unknown occurrence date are often recorded on the 1st
+    # of the month (and January 1st). Flagging these days keeps them from biasing the model.
+    out["is_first_of_month"] = d.dt.day == 1
+    out["is_jan_1"] = (d.dt.month == 1) & (d.dt.day == 1)
     return out
 
 
@@ -59,7 +63,7 @@ def build_daily_panel(crime: pd.DataFrame, weather: pd.DataFrame, feature_cfg: d
         panel,
         temp_bins=feature_cfg["temp_bins_f"],
         temp_labels=feature_cfg["temp_labels"],
-        rain_threshold_mm=feature_cfg["rain_threshold_mm"],
+        rain_threshold_mm=feature_cfg["weather_type"]["rain_threshold_mm"],
     )
     return panel.sort_values(["date", "crime_category"]).reset_index(drop=True)
 

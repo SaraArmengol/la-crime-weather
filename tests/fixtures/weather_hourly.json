@@ -1,0 +1,17 @@
+{
+  "latitude": 34.06,
+  "longitude": -118.24,
+  "timezone": "America/Los_Angeles",
+  "hourly_units": {"time": "iso8601", "temperature_2m": "°F", "precipitation": "mm", "snowfall": "cm"},
+  "hourly": {
+    "time": ["2022-07-01T00:00", "2022-07-01T12:00", "2022-07-02T00:00", "2022-07-02T12:00",
+             "2022-07-03T00:00", "2022-07-03T12:00"],
+    "temperature_2m":       [70.0, 90.0, 80.0, 90.0, 55.0, 65.0],
+    "apparent_temperature": [71.0, 93.0, 82.0, 94.0, 53.0, 64.0],
+    "precipitation":        [0.0, 0.0, 0.0, null, 2.0, 1.4],
+    "rain":                 [0.0, 0.0, 0.0, null, 2.0, 1.4],
+    "snowfall":             [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+    "cloud_cover":          [10, 20, 30, 40, 90, 100],
+    "wind_speed_10m":       [10.0, 14.0, 8.0, 12.0, 20.0, 25.0]
+  }
+}

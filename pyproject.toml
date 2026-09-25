@@ -18,6 +18,8 @@ dependencies = [
   "pyarrow>=15.0",
   "duckdb>=1.0",
   "statsmodels>=0.14",
+  "scikit-learn>=1.4",
+  "lxml>=5.0",
   "python-dotenv>=1.0",
 ]
 

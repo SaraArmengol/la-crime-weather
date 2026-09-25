@@ -1,0 +1,10 @@
+{
+  "raw_rows": 877327,
+  "clean_rows": 877327,
+  "rows_dropped_pct": 0.0,
+  "missing_coords_pct": 0.26,
+  "missing_hour_pct": 0.0,
+  "other_type_pct": 12.08,
+  "first_of_month_pct": 4.7,
+  "fraud_on_first_of_month_pct": 12.54
+}

@@ -1,7 +1,9 @@
-"""Extract daily historical weather for Los Angeles.
+"""Extract hourly historical weather for Los Angeles from Open-Meteo (free, no key).
 
-Default provider: Open-Meteo historical archive (free, no key).
-Responses are cached to disk so re-running the pipeline never re-hits the API.
+Hourly data (rather than Open-Meteo's daily summaries) keeps the approach from the
+CS 2316 version: aggregate hours into days ourselves, which also gives variables
+the daily endpoint lacks (average cloud cover, average apparent temperature).
+Responses are cached on disk so re-running the pipeline never re-hits the API.
 """
 
 from __future__ import annotations
@@ -29,7 +31,7 @@ def fetch_weather(
     longitude: float,
     start: str,
     end: str,
-    daily_variables: list[str],
+    hourly_variables: list[str],
     timezone: str,
     cache_dir: Path,
     session: requests.Session | None = None,
@@ -40,7 +42,7 @@ def fetch_weather(
         "longitude": longitude,
         "start_date": start,
         "end_date": end,
-        "daily": ",".join(daily_variables),
+        "hourly": ",".join(hourly_variables),
         "timezone": timezone,
         "temperature_unit": "fahrenheit",
         "precipitation_unit": "mm",
@@ -52,7 +54,7 @@ def fetch_weather(
         return json.loads(cache_file.read_text())
 
     session = session or requests.Session()
-    resp = session.get(base_url, params=params, timeout=60)
+    resp = session.get(base_url, params=params, timeout=120)
     resp.raise_for_status()
     payload = resp.json()
     cache_file.write_text(json.dumps(payload))
@@ -60,11 +62,10 @@ def fetch_weather(
     return payload
 
 
-def parse_daily(payload: dict[str, Any]) -> pd.DataFrame:
-    """Convert Open-Meteo's column-oriented `daily` block into a tidy DataFrame."""
-    if "daily" not in payload:
+def parse_hourly(payload: dict[str, Any]) -> pd.DataFrame:
+    """Convert Open-Meteo's column-oriented `hourly` block into a tidy DataFrame."""
+    if "hourly" not in payload:
         raise ValueError(f"Unexpected weather payload; keys: {sorted(payload)}")
-    df = pd.DataFrame(payload["daily"])
-    df = df.rename(columns={"time": "date"})
-    df["date"] = pd.to_datetime(df["date"]).dt.normalize()
-    return df
+    df = pd.DataFrame(payload["hourly"])
+    df["time"] = pd.to_datetime(df["time"], errors="coerce")
+    return df.dropna(subset=["time"])

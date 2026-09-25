@@ -5,9 +5,9 @@ The small aggregated files the dashboard needs are committed in `app/data/`.
 
 | Folder | Contents | Produced by |
 |---|---|---|
-| `raw/` | `crime_raw.parquet`, `weather_raw.parquet`, `weather_cache/`, `html/` snapshots | `crime-weather extract` |
-| `processed/` | `crime_clean.parquet`, `weather_clean.parquet`, `daily_panel.parquet`, `model_results.csv`, `quality_report.json` | `transform`, `model` |
-| `warehouse.duckdb` | Tables `crime`, `weather`, `daily_panel` | `load` |
+| `raw/` | `crime_raw.parquet`, `weather_hourly.parquet`, `ucr_cities.parquet`, `weather_cache/`, `html/` snapshots | `crime-weather extract` |
+| `processed/` | `crime_clean.parquet`, `weather_clean.parquet`, `daily_panel.parquet`, `ucr_benchmark.parquet`, model and analysis CSVs, `quality_report.json` | `transform`, `model` |
+| `warehouse.duckdb` | Tables `crime`, `weather`, `daily_panel`, `ucr_benchmark` | `load` |
 
 ## `crime_clean` (one row per incident)
 
@@ -18,16 +18,18 @@ The small aggregated files the dashboard needs are committed in `app/data/`.
 | `hour_occ` | int, nullable | From `TIME OCC` (HHMM); invalid values → null |
 | `area`, `area_name` | str | One of 21 LAPD geographic areas |
 | `crm_cd`, `crm_cd_desc` | str | Crime code and description |
-| `crime_category` | str | violent / property / vehicle / other (rules in `transform/clean_crime.py`) |
+| `crime_type` | str | FBI UCR type (Larceny theft, Aggravated assault, ...), plus Simple assault, Fraud, Vandalism, Other |
+| `crime_category` | str | violent / property / other, derived from `crime_type` |
 | `lat`, `lon` | float, nullable | `(0, 0)` placeholders converted to null |
 
 ## `daily_panel` (one row per day × category)
 
-`date`, `crime_category`, `crime_count`, `temp_max_f`, `temp_min_f`, `precip_mm`, `wind_max_kmh`, `year`, `month`, `dow`, `is_weekend`, `is_holiday`, `temp_bin`, `rain_day`
+`date`, `crime_category`, `crime_count`, `temp_mean_f`, `temp_max_f`, `apparent_temp_mean_f`, `precip_mm`, `rain_mm`, `snowfall_cm`, `cloud_cover_pct`, `wind_mean_kmh`, `weather_type`, `year`, `month`, `dow`, `is_weekend`, `is_holiday`, `is_first_of_month`, `is_jan_1`, `temp_bin`, `rain_day`
 
 ## Cleaning decisions (record numbers after your first full run)
 
 - Duplicate report numbers removed: [N]
 - Unparseable dates dropped: [N]
 - Missing coordinates: [X]%
-- Crimes categorized as "other": [X]% (review if above ~20%)
+- Crimes with type "Other": [X]% (review if above ~20%)
+- Crimes dated the 1st of a month: [X]% (≈3.3% expected)
